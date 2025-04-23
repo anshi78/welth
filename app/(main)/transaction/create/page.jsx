@@ -1,5 +1,5 @@
 import { getUserAccounts } from "@/actions/dashboard";
-import { defaultCategories } from "@/C:/Users/91860/OneDrive/Desktop/Welth/welth/components/data/categories.js";
+import { defaultCategories } from "@/components/data/categories";
 import { AddTransactionForm } from "../_components/transaction-form";
 import { getTransaction } from "@/actions/transaction";
 export default async function AddTransactionPage({ searchParams }) {

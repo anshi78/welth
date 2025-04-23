@@ -1,8 +1,10 @@
+// jsconfig.json
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": ".",       
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["*"]        
     }
-  }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
 }

@@ -1,6 +1,6 @@
-import { serve } from "inngest/next";
-
-import { inngest } from "@/lib/inngest/client";
+// route.js
+mport { serve } from "@inngest/next"
+import { inngest } from "@/lib/inngest/client"; // don't add .js if using .jsconfig alias
 import {
   checkBudgetAlerts,
   generateMonthlyReports,

@@ -49,7 +49,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { categoryColors } from "@/C:/Users/91860/OneDrive/Desktop/Welth/welth/components/data/categories.js";
+// ✅ Correct
+import { categoryColors } from "@/components/data/categories";
 import { bulkDeleteTransactions } from "@/actions/account";
 import useFetch from "@/hooks/use-fetch";
 import { BarLoader } from "react-spinners";
