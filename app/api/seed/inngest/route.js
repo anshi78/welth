@@ -1,6 +1,6 @@
 // route.js
-mport { serve } from "@inngest/next"
-import { inngest } from "@/lib/inngest/client"; // don't add .js if using .jsconfig alias
+import { serve } from "@inngest/next";
+import { inngest } from "@/lib/inngest/client"; // Don't add .js if using .jsconfig alias
 import {
   checkBudgetAlerts,
   generateMonthlyReports,
@@ -8,7 +8,8 @@ import {
   triggerRecurringTransactions,
 } from "@/lib/inngest/function";
 
-export const { GET, POST, PUT } = serve({
+// Make sure you're correctly exporting the API functions
+const handler = serve({
   client: inngest,
   functions: [
     processRecurringTransaction,
@@ -17,3 +18,6 @@ export const { GET, POST, PUT } = serve({
     checkBudgetAlerts,
   ],
 });
+
+// Export the HTTP methods
+export const { GET, POST, PUT } = handler;
