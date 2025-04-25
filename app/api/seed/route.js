@@ -1,6 +1,18 @@
-import { seedTransactions } from "@/actions/seed";
+import { serve } from "inngest/next";
+import { inngest } from "@/lib/inngest/client"; // your client file
+import {
+  processRecurringTransaction,
+  triggerRecurringTransactions,
+  generateMonthlyReports,
+  checkBudgetAlerts,
+} from "@/lib/inngest/function";
 
-export async function GET() {
-  const result = await seedTransactions();
-  return Response.json(result);
-}
+export const { GET, POST } = serve({
+  client: inngest,
+  functions: [
+    processRecurringTransaction,
+    triggerRecurringTransactions,
+    generateMonthlyReports,
+    checkBudgetAlerts,
+  ],
+});

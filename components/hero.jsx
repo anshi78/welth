@@ -30,7 +30,7 @@ const HeroSection = () => {
   return (
     <div className="pb-20 px-4">
       <div className="container mx-auto text-center">
-        <h1 className="text-5xl md:text-8xl lg:text-[105px] pb-6 gradient-title">
+        <h1 className="text-2xl md:text-4xl lg:text-[105px] pb-6 gradient-title">
           Manage Your Finances <br /> with Intelligence
         </h1>
         <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -50,7 +50,7 @@ const HeroSection = () => {
         <div ref={imageRef} className="hero-image transition-transform duration-500">
           <Image
             src="/banner.jpeg"
-            width={1280}
+            width={1100}
             height={720}
             alt="Dashboard Preview"
             className="rounded-lg shadow-2xl border mx-auto"
