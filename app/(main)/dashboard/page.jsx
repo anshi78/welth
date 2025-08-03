@@ -12,19 +12,28 @@ import { DashboardOverview } from "./_components/transaction-overview";
 
 
 export default async function DashboardPage() {
-  // Correctly destructure the results from Promise.all
-  // getDashboardData() returns an object with { accounts: [], transactions: [] }
-  const [accounts, dashboardData] = await Promise.all([
-    getUserAccounts(),
-    getDashboardData(),
-  ]);
-
-  const defaultAccount = accounts?.find((account) => account.isDefault);
-
-  // Get budget for default account
+  let accounts = [];
+  let dashboardData = { transactions: [] };
   let budgetData = null;
-  if (defaultAccount) {
-    budgetData = await getCurrentBudget(defaultAccount.id);
+
+  try {
+    // Correctly destructure the results from Promise.all
+    // getDashboardData() returns an object with { accounts: [], transactions: [] }
+    [accounts, dashboardData] = await Promise.all([
+      getUserAccounts(),
+      getDashboardData(),
+    ]);
+
+    const defaultAccount = accounts?.find((account) => account.isDefault);
+
+    // Get budget for default account
+    if (defaultAccount) {
+      budgetData = await getCurrentBudget(defaultAccount.id);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes in development
+    console.error("Failed to fetch dashboard data:", error);
+    // In production, the component will still render with empty data
   }
 
   return (
