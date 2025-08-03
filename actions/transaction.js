@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
+import { checkUser } from "@/lib/checkUser";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -197,7 +198,7 @@ export async function updateTransaction(id, data) {
 // Get User Transactions
 export async function getUserTransactions(query = {}) {
   try {
-    const { userId } = await auth();
+    const { userId } = await checkUser();
     if (!userId) throw new Error("Unauthorized");
 
     const user = await db.user.findUnique({

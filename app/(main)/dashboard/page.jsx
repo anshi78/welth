@@ -1,5 +1,4 @@
-
-
+"use server";
 import { Suspense } from "react";
 import { getUserAccounts } from "@/actions/dashboard";
 import { getDashboardData } from "@/actions/dashboard";
@@ -11,8 +10,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { DashboardOverview } from "./_components/transaction-overview";
 
+
 export default async function DashboardPage() {
-  const [accounts, transactions] = await Promise.all([
+  // Correctly destructure the results from Promise.all
+  // getDashboardData() returns an object with { accounts: [], transactions: [] }
+  const [accounts, dashboardData] = await Promise.all([
     getUserAccounts(),
     getDashboardData(),
   ]);
@@ -36,7 +38,8 @@ export default async function DashboardPage() {
       {/* Dashboard Overview */}
       <DashboardOverview
         accounts={accounts}
-        transactions={transactions || []}
+        // Pass the correct transactions array from the dashboardData object
+        transactions={dashboardData.transactions || []}
       />
 
       {/* Accounts Grid */}
@@ -49,9 +52,9 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </CreateAccountDrawer>
-        
-        {accounts.length > 0 &&
-          accounts?.map((account) => (
+        {/* Defensive check to ensure accounts is an array before mapping */}
+        {Array.isArray(accounts) && accounts.length > 0 &&
+          accounts.map((account) => (
             <AccountCard key={account.id} account={account} />
           ))}
       </div>
