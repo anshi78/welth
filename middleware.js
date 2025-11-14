@@ -7,13 +7,7 @@ const isProtectedRoute = createRouteMatcher([
   "/transaction(.*)",
 ]);
 
-// This is the main middleware function
-export default clerkMiddleware((auth, req) => {
-  // If the route is a protected route, protect it
-  if (isProtectedRoute(req)) {
-    auth().protect();
-  }
-});
+export default clerkMiddleware();
 
 // This config specifies which routes the middleware runs on
 export const config = {
