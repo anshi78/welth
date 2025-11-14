@@ -1,4 +1,3 @@
-// template.jsx
 import {
   Body,
   Container,
@@ -13,7 +12,7 @@ import {
 // Dummy data for preview
 const PREVIEW_DATA = {
   monthlyReport: {
-    userName: "John Doe",
+    userName: "Anshu",
     type: "monthly-report",
     data: {
       month: "December",
@@ -36,23 +35,36 @@ const PREVIEW_DATA = {
     },
   },
   budgetAlert: {
-    userName: "Anu",
+    userName: "John Doe",
     type: "budget-alert",
     data: {
       percentageUsed: 85,
-      budgetAmount: 5000,
-      totalExpenses: 3800,
+      budgetAmount: 4000,
+      totalExpenses: 3400,
     },
   },
 };
 
 export default function EmailTemplate({
-  userName = "",
+  userName,
   type = "monthly-report",
-  data = {},
+  data,
 }) {
-  if (type === "monthly-report") {
-    const stats = data?.stats ?? {};
+  // 👇 Use dummy preview data when not passed (so local preview always shows content)
+  const finalType = type || "monthly-report";
+  const finalData =
+    data && Object.keys(data).length > 0
+      ? data
+      : PREVIEW_DATA[finalType]?.data || {};
+
+  const finalUserName =
+    userName || PREVIEW_DATA[finalType]?.userName || "User";
+
+  const stats = finalData?.stats || {};
+  const totalIncome = stats?.totalIncome ?? 0;
+  const totalExpenses = stats?.totalExpenses ?? 0;
+
+  if (finalType === "monthly-report") {
     return (
       <Html>
         <Head />
@@ -61,54 +73,49 @@ export default function EmailTemplate({
           <Container style={styles.container}>
             <Heading style={styles.title}>Monthly Financial Report</Heading>
 
-            <Text style={styles.text}>Hello {userName},</Text>
+            <Text style={styles.text}>Hello {finalUserName},</Text>
             <Text style={styles.text}>
-              Here’s your financial summary for {data?.month ?? ""}
+              Here’s your financial summary for{" "}
+              {finalData?.month || "this month"}:
             </Text>
 
             {/* Main Stats */}
             <Section style={styles.statsContainer}>
               <div style={styles.stat}>
                 <Text style={styles.text}>Total Income</Text>
-                <Text style={styles.heading}>
-                  ${stats.totalIncome ?? 0}
-                </Text>
+                <Text style={styles.heading}>${totalIncome}</Text>
               </div>
               <div style={styles.stat}>
                 <Text style={styles.text}>Total Expenses</Text>
-                <Text style={styles.heading}>
-                  ${stats.totalExpenses ?? 0}
-                </Text>
+                <Text style={styles.heading}>${totalExpenses}</Text>
               </div>
               <div style={styles.stat}>
                 <Text style={styles.text}>Net</Text>
                 <Text style={styles.heading}>
-                  ${ (stats.totalIncome ?? 0) - (stats.totalExpenses ?? 0) }
+                  ${totalIncome - totalExpenses}
                 </Text>
               </div>
             </Section>
 
             {/* Category Breakdown */}
-            {stats.byCategory && (
+            {stats?.byCategory && (
               <Section style={styles.section}>
                 <Heading style={styles.heading}>Expenses by Category</Heading>
-                {Object.entries(stats.byCategory).map(
-                  ([category, amount]) => (
-                    <div key={category} style={styles.row}>
-                      <Text style={styles.text}>{category}</Text>
-                      <Text style={styles.text}>${amount}</Text>
-                    </div>
-                  )
-                )}
+                {Object.entries(stats.byCategory).map(([category, amount]) => (
+                  <div key={category} style={styles.row}>
+                    <Text style={styles.text}>{category}</Text>
+                    <Text style={styles.text}>${amount}</Text>
+                  </div>
+                ))}
               </Section>
             )}
 
-            {/* AI Insights */}
-            {Array.isArray(data?.insights) && (
+            {/* Insights */}
+            {finalData?.insights && (
               <Section style={styles.section}>
                 <Heading style={styles.heading}>Welth Insights</Heading>
-                {data.insights.map((insight, idx) => (
-                  <Text key={idx} style={styles.text}>
+                {finalData.insights.map((insight, i) => (
+                  <Text key={i} style={styles.text}>
                     • {insight}
                   </Text>
                 ))}
@@ -125,8 +132,11 @@ export default function EmailTemplate({
     );
   }
 
-  if (type === "budget-alert") {
-    const alert = data ?? {};
+  if (finalType === "budget-alert") {
+    const percentageUsed = finalData?.percentageUsed ?? 0;
+    const budgetAmount = finalData?.budgetAmount ?? 0;
+    const totalExpenses = finalData?.totalExpenses ?? 0;
+
     return (
       <Html>
         <Head />
@@ -134,28 +144,23 @@ export default function EmailTemplate({
         <Body style={styles.body}>
           <Container style={styles.container}>
             <Heading style={styles.title}>Budget Alert</Heading>
-            <Text style={styles.text}>Hello {userName},</Text>
+            <Text style={styles.text}>Hello {finalUserName},</Text>
             <Text style={styles.text}>
-              You’ve used {(alert.percentageUsed ?? 0).toFixed(1)}% of your
-              monthly budget.
+              You’ve used {percentageUsed}% of your monthly budget.
             </Text>
             <Section style={styles.statsContainer}>
               <div style={styles.stat}>
                 <Text style={styles.text}>Budget Amount</Text>
-                <Text style={styles.heading}>
-                  ${alert.budgetAmount ?? 0}
-                </Text>
+                <Text style={styles.heading}>${budgetAmount}</Text>
               </div>
               <div style={styles.stat}>
                 <Text style={styles.text}>Spent So Far</Text>
-                <Text style={styles.heading}>
-                  ${alert.totalExpenses ?? 0}
-                </Text>
+                <Text style={styles.heading}>${totalExpenses}</Text>
               </div>
               <div style={styles.stat}>
                 <Text style={styles.text}>Remaining</Text>
                 <Text style={styles.heading}>
-                  ${ (alert.budgetAmount ?? 0) - (alert.totalExpenses ?? 0) }
+                  ${budgetAmount - totalExpenses}
                 </Text>
               </div>
             </Section>
@@ -165,16 +170,8 @@ export default function EmailTemplate({
     );
   }
 
-  // Fallback if type is unrecognized
   return null;
 }
-
-// Provide preview data for the CLI / playground
-export const previewData = {
-  userName: PREVIEW_DATA.monthlyReport.userName,
-  type: PREVIEW_DATA.monthlyReport.type,
-  data: PREVIEW_DATA.monthlyReport.data,
-};
 
 const styles = {
   body: {
