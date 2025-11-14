@@ -44,11 +44,19 @@ const clerk = clerkMiddleware(async (auth, req) => {
 // Chain middlewares - ArcJet runs first, then Clerk
 export default createMiddleware(aj, clerk);
 
+// middleware.js
+
+// ... (all your aj and clerk code is correct) ...
+
+// THIS IS THE FIX:
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
-    "/(api|trpc)(.*)",
-  ],
+  // This matcher tells the middleware to run on all routes
+  // EXCEPT for routes that start with:
+  // - /api (API routes)
+  // - /_next/static (static files)
+  // - /_next/image (image optimization files)
+  // - /favicon.ico (favicon file)
+  //
+  // This stops it from bundling large libraries on API routes.
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
