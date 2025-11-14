@@ -1,14 +1,15 @@
-// route.js
-import { serve } from "inngest/next"; // remove the "@"
-import { inngest } from "@/lib/inngest/client";
+// Correct code for app/api/seed/inngest/route.js
+
+import { serve } from "inngest/next";
+// This path goes up 4 levels to the root
+import { inngest } from "../../../../lib/inngest/client"; 
 import {
-  checkBudgetAlerts,
-  generateMonthlyReports,
   processRecurringTransaction,
   triggerRecurringTransactions,
-} from "@/lib/inngest/function";
+  generateMonthlyReports,
+  checkBudgetAlerts,
+} from "../../../../lib/inngest/function"; // Also 4 levels up
 
-// This will export API route handlers for GET, POST, PUT
 export const { GET, POST, PUT } = serve({
   client: inngest,
   functions: [
